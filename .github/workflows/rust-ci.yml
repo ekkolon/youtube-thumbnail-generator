@@ -1,0 +1,37 @@
+name: Rust CI
+
+on:
+  # Running jobs when pushing to the main branch is disabled for now.
+  # This is because we have no rust source files in the repo yet,
+  # or rather this step is an overkill for the changes being pushed to
+  # this repo.
+  #
+  #   push:
+  #     branches:
+  #       - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Rust
+        uses: actions/checkout@v2
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Build
+        run: cargo build --verbose
+
+      - name: Test
+        run: cargo test --verbose
+
+      - name: Clippy
+        run: cargo clippy --verbose -- -D warnings
+
+      - name: Audit
+        run: cargo audit
