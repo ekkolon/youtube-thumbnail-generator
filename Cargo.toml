@@ -1,0 +1,22 @@
+[package]
+name = "ytthumb"
+description = "Lightning-fast command-line tool to generate high-quality and optimized YouTube thumbnails."
+authors = ["Nelson Dominguez <ekkolon.projects@gmail.com>"]
+version = "0.1.0"
+license = "Apache-2.0"
+edition = "2021"
+readme = "README.md"
+repository = "https://github.com/ekkolon/youtube-thumbnail-generator"
+
+[[bin]]
+name = "ytthumb"
+path = "src/main.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+image = { version = "0.24.7", features = ["gif", "jpeg", "png"] }
+clap = { version = "4.4.6", features = ["derive"] }
+directories = "5.0.1"
+path-clean = "1.0.1"
+thiserror = "1.0.50"
