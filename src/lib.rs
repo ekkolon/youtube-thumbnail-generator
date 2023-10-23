@@ -96,6 +96,55 @@ pub enum ImageFormat {
     Jpeg,
 }
 
+/// Generate a thumbnail with the specified target width and height.
+///
+/// This function takes an input `YtImage` and generates a thumbnail with the specified
+/// dimensions. You can also specify a sampling filter to use during the thumbnail
+/// generation. If no filter is provided, it defaults to the `Nearest` filter.
+///
+/// ### Arguments
+/// * `yt_img` - A reference to the input `YtImage` from which the thumbnail will be generated.
+/// * `width` - The target width of the generated thumbnail.
+/// * `height` - The target height of the generated thumbnail.
+/// * `sampling_filter` - An optional parameter to specify the sampling filter to use.
+///                      If not provided, it defaults to `FilterType::Nearest`.
+///
+/// ### Returns
+/// The function returns a new `YtImage` that represents the generated thumbnail.
+///
+/// ### Example
+/// ```rust
+/// use image::imageops::FilterType;
+/// use thumbnails::generate_thumbnail;
+/// use your_module::YtImage;
+///
+/// let input_image = YtImage::new(/* ... */);
+/// let thumbnail = generate_thumbnail(&input_image, 100, 100, Some(FilterType::CatmullRom));
+/// ```
+///
+/// In this example, a thumbnail with a target width and height of 100 pixels is generated
+/// from the `input_image` using the `CatmullRom` sampling filter.
+pub fn generate_thumbnail(
+    yt_img: &YtImage,
+    width: u32,
+    height: u32,
+    sampling_filter: SamplingFilter,
+) -> Result<YtImage, Box<dyn Error>> {
+    let thumb = yt_img
+        .to_dyn_image()?
+        .resize_to_fill(width, height, sampling_filter.to_filter_type())
+        .to_rgba8();
+
+    let thumb_width = thumb.width();
+    let thumb_height = thumb.height();
+
+    Ok(YtImage {
+        raw_pixels: thumb.into_vec(),
+        width: thumb_width,
+        height: thumb_height,
+    })
+}
+
 /// Open an image at the given path from the filesystem.
 ///
 /// ### Arguments
