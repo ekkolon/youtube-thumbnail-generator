@@ -28,6 +28,12 @@ mod sampling;
 pub mod cli;
 
 /// Recommended width for YouTube thumbnails.
+pub const YT_THUMB_RECOMMENDED_WIDTH: u32 = 1280;
+
+/// Recommended width for YouTube thumbnails.
+pub const YT_THUMB_RECOMMENDED_HEIGHT: u32 = 720;
+
+pub fn run(args: &NormalizedArgs) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
