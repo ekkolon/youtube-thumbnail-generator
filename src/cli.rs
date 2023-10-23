@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use clap::Parser;
 
@@ -23,7 +23,7 @@ use crate::SamplingFilter;
 #[command(author, version, about, long_about = None)]
 pub struct Args {
     /// Path to an image from which to generate the thumbnail.
-    pub path: PathBuf,
+    pub path: Box<Path>,
 
     /// The name for the generated thumbnail.
     /// If not specified, the input filename + '_thumb' is used.
