@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use cli::Args;
-use errors::Error;
+use clap::ValueEnum;
+use strum_macros::{Display, EnumString, EnumVariantNames};
 
 pub fn run(_args: &Args) -> Result<(), Error> {
     Ok(())
+}
+
+/// Enum representing allowed formats for YouTube thumbnails.
+/// These constraints are specified and taken from the
+/// [Youtube Data API](https://developers.google.com/youtube/v3/docs/thumbnails/set) docs.
+#[derive(ValueEnum, Display, EnumString, EnumVariantNames, Clone, Copy, Debug)]
+#[strum(serialize_all = "lowercase")]
+pub enum ImageFormat {
+    #[strum(serialize = "png")]
+    Png,
+
+    #[strum(serialize = "jpeg", serialize = "jpg")]
+    Jpeg,
 }

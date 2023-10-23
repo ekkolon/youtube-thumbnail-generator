@@ -16,7 +16,8 @@ use std::path::{Path, PathBuf};
 
 use clap::Parser;
 
-use crate::SamplingFilter;
+use crate::{sampling::SamplingFilter, ImageFormat};
+
 
 /// CLI arguments parsed by *clap* to configure the thumbnail generation process.
 #[derive(Parser, Debug)]
