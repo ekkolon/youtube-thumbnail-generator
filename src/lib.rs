@@ -34,6 +34,17 @@ pub const YT_THUMB_RECOMMENDED_WIDTH: u32 = 1280;
 pub const YT_THUMB_RECOMMENDED_HEIGHT: u32 = 720;
 
 pub fn run(args: &NormalizedArgs) -> Result<(), Box<dyn Error>> {
+    let img = &open(&args.path)?;
+
+    let thumb = &generate_thumbnail(
+        img,
+        YT_THUMB_RECOMMENDED_WIDTH,
+        YT_THUMB_RECOMMENDED_HEIGHT,
+        args.sampling_filter,
+    )?;
+
+    thumb.save(&args.get_final_output_path())?;
+
     Ok(())
 }
 
