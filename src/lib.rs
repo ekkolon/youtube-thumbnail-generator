@@ -88,3 +88,22 @@ pub enum ImageFormat {
     #[strum(serialize = "jpeg", serialize = "jpg")]
     Jpeg,
 }
+
+/// Open an image at the given path from the filesystem.
+///
+/// ### Arguments
+/// * `path` - Path to the image to open.
+fn open(path: &impl AsRef<Path>) -> Result<YtImage, Box<dyn Error>> {
+    let img = image::open(path)?;
+
+    let (width, height) = img.dimensions();
+
+    // Raw vec representing RGBA pixels.
+    let raw_pixels = img.to_rgba8().to_vec();
+
+    Ok(YtImage {
+        raw_pixels,
+        width,
+        height,
+    })
+}
