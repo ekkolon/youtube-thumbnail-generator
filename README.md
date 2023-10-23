@@ -1,6 +1,16 @@
-# Youtube Thumbnail Generator
+# YouTube Thumbnail Generator
 
-Lightning-fast command-line tool to generate high-quality and optimized YouTube thumbnails.
+> This project is a work in progress.
+
+Fast, cross-platform CLI tool for generating high-quality YouTube thumbnails.
+
+## Table of Contents
+
+- [CLI Reference](#cli-reference)
+- [Authors](#authors)
+- [License](#license)
+- [Roadmap](#roadmap)
+- [Feedback](#feedback)
 
 ## CLI Reference
 
@@ -50,3 +60,19 @@ Print help (see a summary with '-h')
 **-V**, **--version**
 
 Print version
+
+## Authors
+
+- Nelson Dominguez ([@ekkolon](https://www.github.com/ekkolon))
+
+## License
+
+This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## Roadmap
+
+This project's roadmap will be announced soon. Stay tuned for updates!
+
+## Feedback
+
+If you have any feedback, please reach out at [ekkolon@proton.me](mailto:ekkolon@proton.me)
