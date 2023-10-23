@@ -20,17 +20,17 @@ Fast, cross-platform CLI tool for generating high-quality YouTube thumbnails.
 
 ### <ins>Arguments</ins>
 
-\<PATH> Path to an image from which to generate the thumbnail
+\<PATH> Local image file path for generating the thumbnail
 
 ### <ins>Options</ins>
 
 **-n**, **--name** \<OUT_NAME>
 
-The name for the generated thumbnail. If not specified, the input filename + '\_thumb' is used
+Generated thumbnail name. If not specified, the input filename is used with '\_thumb' appended
 
 **-d**, **--outDir** \<OUT_DIR>
 
-The output directory in which to store the thumbnail. Defaults to the platform-specific user `Documents` folder if unspecified
+Specifies the output directory for the thumbnail. If unspecified, it defaults to the user's platform-specific _Pictures_ folder
 
 **-f**, **--format** \<FORMAT>
 

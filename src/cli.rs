@@ -29,16 +29,18 @@ const DEFAULT_SAMPLING_FILTER: SamplingFilter = SamplingFilter::Lanczos3;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Args {
-    /// Path to an image from which to generate the thumbnail.
+    /// Local image file path for generating the thumbnail
     pub path: Box<Path>,
 
-    /// The name for the generated thumbnail.
-    /// If not specified, the input filename + '_thumb' is used.
+    /// Generated thumbnail name.
+    ///
+    /// If not specified, the input filename is used with '_thumb' appended.
     #[arg(short = 'n', long = "name")]
     pub out_name: Option<String>,
 
-    /// The output directory in which to store the thumbnail.
-    /// Defaults to the platform-specific user `Documents` folder if unspecified.
+    /// Specifies the output directory for the thumbnail.
+    ///
+    /// If unspecified, it defaults to the user's platform-specific 'Pictures' folder
     #[arg(short = 'd', long = "outDir")]
     pub out_dir: Option<PathBuf>,
 
@@ -55,13 +57,13 @@ pub struct Args {
 /// defaults for arguments whose parsed values are *None*.
 #[derive(Debug)]
 pub struct NormalizedArgs {
-    /// Path to an image from which to generate the thumbnail.
+    /// Local image file path for generating the thumbnail
     pub path: Box<Path>,
 
-    /// The name for the generated thumbnail.
+    /// Generated thumbnail name.
     pub out_name: String,
 
-    /// The output directory in which to store the thumbnail.
+    /// Specifies the output directory for the thumbnail.
     pub out_dir: PathBuf,
 
     /// The thumbnail's output format.
