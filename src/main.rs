@@ -18,6 +18,15 @@ use ytthumb::{cli::Args, run};
 
 fn main() {
     let args = Args::parse();
+    let normalized_args = &args.normalize();
 
-    run(&args).unwrap_or_else(|err| panic!("Unable to generate thumbnail due to error: {}", err));
+    let img_result = run(normalized_args);
+
+    match img_result {
+        Ok(_) => println!("Successfully generated thumbnail"),
+        Err(err) => panic!(
+            "An error occured during the thumbnail generation process: {:?}",
+            err
+        ),
+    }
 }

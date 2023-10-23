@@ -20,3 +20,5 @@ clap = { version = "4.4.6", features = ["derive"] }
 directories = "5.0.1"
 path-clean = "1.0.1"
 thiserror = "1.0.50"
+strum = { version = "0.25.0", features = ["derive"] }
+strum_macros = "0.25"
