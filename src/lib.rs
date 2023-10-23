@@ -20,7 +20,14 @@ use image::DynamicImage::{self, ImageRgba8};
 use image::{GenericImageView, ImageBuffer};
 use strum_macros::{Display, EnumString, EnumVariantNames};
 
-pub fn run(_args: &Args) -> Result<(), Error> {
+use cli::NormalizedArgs;
+use sampling::SamplingFilter;
+
+mod sampling;
+
+pub mod cli;
+
+/// Recommended width for YouTube thumbnails.
     Ok(())
 }
 
