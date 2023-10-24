@@ -37,8 +37,8 @@ pub struct Args {
     /// Specifies the output directory for the thumbnail.
     ///
     /// If unspecified, it defaults to the user's platform-specific 'Pictures' folder
-    #[arg(short = 'd', long = "outDir")]
-    pub out_dir: Option<PathBuf>,
+    #[arg(short = 'd', long = "outDir", default_value = default_output_dir().into_os_string())]
+    pub out_dir: PathBuf,
 
     /// The thumbnail's output format.
     #[arg(short, long, default_value_t = ImageFormat::Png)]
@@ -92,7 +92,7 @@ impl Args {
         NormalizedArgs {
             path,
             out_name,
-            out_dir,
+            out_dir: self.out_dir,
             format: self.format,
             sampling_filter: self.sampling_filter,
         }
