@@ -16,7 +16,7 @@ path = "src/main.rs"
 
 [dependencies]
 image = { version = "0.24.7", features = ["gif", "jpeg", "png"] }
-clap = { version = "4.4.6", features = ["derive"] }
+clap = { version = "4.4.6", features = ["derive", "string"] }
 directories = "5.0.1"
 path-clean = "1.0.1"
 thiserror = "1.0.50"
