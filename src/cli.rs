@@ -13,17 +13,11 @@
 // limitations under the License.
 
 use std::path::{Path, PathBuf};
-use std::{env::current_dir, error::Error};
 
 use clap::Parser;
 use directories::UserDirs;
-use path_clean::PathClean;
 
 use crate::{sampling::SamplingFilter, ImageFormat};
-
-const DEFAULT_OUTPUT_FORMAT: ImageFormat = ImageFormat::Png;
-
-const DEFAULT_SAMPLING_FILTER: SamplingFilter = SamplingFilter::Lanczos3;
 
 /// CLI arguments parsed by *clap* to configure the thumbnail generation process.
 #[derive(Parser, Debug)]
@@ -41,70 +35,42 @@ pub struct Args {
     /// Specifies the output directory for the thumbnail.
     ///
     /// If unspecified, it defaults to the user's platform-specific 'Pictures' folder
-    #[arg(short = 'd', long = "outDir")]
-    pub out_dir: Option<PathBuf>,
-
-    /// The thumbnail's output format.
-    #[arg(short, long)]
-    pub format: Option<ImageFormat>,
-
-    /// Sampling algorithm to use for thumbnail generation.
-    #[arg(short = 's', long = "sampling")]
-    pub sampling_filter: Option<SamplingFilter>,
-}
-
-/// Represents CLI arguments parsed by `clap` with reasonable
-/// defaults for arguments whose parsed values are *None*.
-#[derive(Debug)]
-pub struct NormalizedArgs {
-    /// Local image file path for generating the thumbnail
-    pub path: Box<Path>,
-
-    /// Generated thumbnail name.
-    pub out_name: String,
-
-    /// Specifies the output directory for the thumbnail.
+    #[arg(short = 'd', long = "outDir", default_value = default_output_dir().into_os_string())]
     pub out_dir: PathBuf,
 
     /// The thumbnail's output format.
+    #[arg(short, long, default_value_t = ImageFormat::Png)]
     pub format: ImageFormat,
 
     /// Sampling algorithm to use for thumbnail generation.
+    #[arg(short = 's', long = "sampling", default_value_t = SamplingFilter::Lanczos3)]
     pub sampling_filter: SamplingFilter,
 }
 
 impl Args {
-    /// Returns parsed arguments with reasonable defaults.
-    pub fn normalize(self) -> NormalizedArgs {
-        let out_dir = self.out_dir.unwrap_or(default_output_dir());
-        let format = self.format.unwrap_or(DEFAULT_OUTPUT_FORMAT);
-        let sampling_filter = self.sampling_filter.unwrap_or(DEFAULT_SAMPLING_FILTER);
-        let out_name = self.out_name.unwrap_or_else(|| {
-            let p_without_ext = self.path.with_extension("");
-            let original_filename = p_without_ext.file_name().unwrap();
-
-            if original_filename.is_empty() {
-                panic!("Invalid empty path to image file")
-            }
-
-            format!("{}_thumb.{}", &original_filename.to_str().unwrap(), &format)
-        });
-
-        let path = abs_path_to_img(&self.path).unwrap();
-
-        NormalizedArgs {
-            path,
-            out_name,
-            out_dir,
-            format,
-            sampling_filter,
-        }
-    }
-}
-
-impl NormalizedArgs {
     pub fn get_final_output_path(&self) -> PathBuf {
-        self.out_dir.join(&self.out_name)
+        self.out_dir.join(self.get_out_name())
+    }
+
+    fn get_out_name(&self) -> String {
+        self.out_name
+            .as_ref()
+            .map(|val| val.to_string())
+            .unwrap_or_else(|| {
+                let p_without_ext = self.path.with_extension("");
+                let original_filename = p_without_ext.file_name().unwrap();
+
+                if original_filename.is_empty() {
+                    panic!("Invalid empty path to image file")
+                }
+
+                format!(
+                    "{}_thumb.{}",
+                    &original_filename.to_str().unwrap(),
+                    &self.format
+                )
+                .to_string()
+            })
     }
 }
 
@@ -118,17 +84,4 @@ fn default_output_dir() -> PathBuf {
             panic!("Unable to find user 'Pictures' directory in the operating sytem")
         })
         .to_path_buf()
-}
-
-fn abs_path_to_img(path: &impl AsRef<Path>) -> Result<Box<Path>, Box<dyn Error>> {
-    let path = path.as_ref();
-
-    let absolute_path = if path.is_absolute() {
-        path.to_path_buf().into_boxed_path()
-    } else {
-        current_dir()?.join(path).into_boxed_path()
-    }
-    .clean();
-
-    Ok(absolute_path.into_boxed_path())
 }

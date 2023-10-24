@@ -1,5 +1,6 @@
 use clap::ValueEnum;
 use image::imageops::FilterType;
+use strum_macros::{Display, EnumString, EnumVariantNames};
 
 /// Sampling algorithm to use for thumbnail generation.
 ///
@@ -7,7 +8,8 @@ use image::imageops::FilterType;
 /// This is equivalent to the `FilterType` provided by the *image* crate.
 ///
 /// We duplicate this enum to make it compatible with *clap*s `ValueEnum`.
-#[derive(ValueEnum, Clone, Copy, Debug, PartialEq)]
+#[derive(ValueEnum, Display, EnumString, EnumVariantNames, Clone, Copy, Debug, PartialEq)]
+#[strum(serialize_all = "lowercase")]
 pub enum SamplingFilter {
     /// Nearest Neighbor
     Nearest,

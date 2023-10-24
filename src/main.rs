@@ -18,9 +18,8 @@ use ytthumb::{cli::Args, run};
 
 fn main() {
     let args = Args::parse();
-    let normalized_args = &args.normalize();
 
-    let img_result = run(normalized_args);
+    let img_result = run(&args);
 
     match img_result {
         Ok(_) => println!("Successfully generated thumbnail"),
