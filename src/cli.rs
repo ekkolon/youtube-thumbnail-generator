@@ -21,8 +21,6 @@ use path_clean::PathClean;
 
 use crate::{sampling::SamplingFilter, ImageFormat};
 
-const DEFAULT_OUTPUT_FORMAT: ImageFormat = ImageFormat::Png;
-
 const DEFAULT_SAMPLING_FILTER: SamplingFilter = SamplingFilter::Lanczos3;
 
 /// CLI arguments parsed by *clap* to configure the thumbnail generation process.
@@ -45,8 +43,8 @@ pub struct Args {
     pub out_dir: Option<PathBuf>,
 
     /// The thumbnail's output format.
-    #[arg(short, long)]
-    pub format: Option<ImageFormat>,
+    #[arg(short, long, default_value_t = ImageFormat::Png)]
+    pub format: ImageFormat,
 
     /// Sampling algorithm to use for thumbnail generation.
     #[arg(short = 's', long = "sampling")]
@@ -77,7 +75,6 @@ impl Args {
     /// Returns parsed arguments with reasonable defaults.
     pub fn normalize(self) -> NormalizedArgs {
         let out_dir = self.out_dir.unwrap_or(default_output_dir());
-        let format = self.format.unwrap_or(DEFAULT_OUTPUT_FORMAT);
         let sampling_filter = self.sampling_filter.unwrap_or(DEFAULT_SAMPLING_FILTER);
         let out_name = self.out_name.unwrap_or_else(|| {
             let p_without_ext = self.path.with_extension("");
@@ -87,7 +84,11 @@ impl Args {
                 panic!("Invalid empty path to image file")
             }
 
-            format!("{}_thumb.{}", &original_filename.to_str().unwrap(), &format)
+            format!(
+                "{}_thumb.{}",
+                &original_filename.to_str().unwrap(),
+                &self.format
+            )
         });
 
         let path = abs_path_to_img(&self.path).unwrap();
@@ -96,7 +97,7 @@ impl Args {
             path,
             out_name,
             out_dir,
-            format,
+            format: self.format,
             sampling_filter,
         }
     }
