@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use std::env::current_dir;
 use std::error::Error;
 use std::path::Path;
 
 use clap::ValueEnum;
 use image::DynamicImage::{self, ImageRgba8};
 use image::{GenericImageView, ImageBuffer};
+use path_clean::PathClean;
 use strum_macros::{Display, EnumString, EnumVariantNames};
 
-use cli::NormalizedArgs;
+use cli::Args;
 use sampling::SamplingFilter;
 
 mod sampling;
@@ -33,7 +35,7 @@ pub const YT_THUMB_RECOMMENDED_WIDTH: u32 = 1280;
 /// Recommended width for YouTube thumbnails.
 pub const YT_THUMB_RECOMMENDED_HEIGHT: u32 = 720;
 
-pub fn run(args: &NormalizedArgs) -> Result<(), Box<dyn Error>> {
+pub fn run(args: &Args) -> Result<(), Box<dyn Error>> {
     let img = &open(&args.path)?;
 
     let thumb = &generate_thumbnail(
@@ -157,7 +159,8 @@ pub fn generate_thumbnail(
 /// ### Arguments
 /// * `path` - Path to the image to open.
 fn open(path: &impl AsRef<Path>) -> Result<YtImage, Box<dyn Error>> {
-    let img = image::open(path)?;
+    let img_path_abs = abs_path_to_img(&path)?;
+    let img = image::open(&img_path_abs)?;
 
     let (width, height) = img.dimensions();
 
@@ -169,4 +172,17 @@ fn open(path: &impl AsRef<Path>) -> Result<YtImage, Box<dyn Error>> {
         width,
         height,
     })
+}
+
+fn abs_path_to_img(path: &impl AsRef<Path>) -> Result<Box<Path>, Box<dyn Error>> {
+    let path = path.as_ref();
+
+    let absolute_path = if path.is_absolute() {
+        path.to_path_buf().into_boxed_path()
+    } else {
+        current_dir()?.join(path).into_boxed_path()
+    }
+    .clean();
+
+    Ok(absolute_path.into_boxed_path())
 }
