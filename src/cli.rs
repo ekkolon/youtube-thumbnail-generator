@@ -21,8 +21,6 @@ use path_clean::PathClean;
 
 use crate::{sampling::SamplingFilter, ImageFormat};
 
-const DEFAULT_SAMPLING_FILTER: SamplingFilter = SamplingFilter::Lanczos3;
-
 /// CLI arguments parsed by *clap* to configure the thumbnail generation process.
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -47,8 +45,8 @@ pub struct Args {
     pub format: ImageFormat,
 
     /// Sampling algorithm to use for thumbnail generation.
-    #[arg(short = 's', long = "sampling")]
-    pub sampling_filter: Option<SamplingFilter>,
+    #[arg(short = 's', long = "sampling", default_value_t = SamplingFilter::Lanczos3)]
+    pub sampling_filter: SamplingFilter,
 }
 
 /// Represents CLI arguments parsed by `clap` with reasonable
@@ -74,8 +72,6 @@ pub struct NormalizedArgs {
 impl Args {
     /// Returns parsed arguments with reasonable defaults.
     pub fn normalize(self) -> NormalizedArgs {
-        let out_dir = self.out_dir.unwrap_or(default_output_dir());
-        let sampling_filter = self.sampling_filter.unwrap_or(DEFAULT_SAMPLING_FILTER);
         let out_name = self.out_name.unwrap_or_else(|| {
             let p_without_ext = self.path.with_extension("");
             let original_filename = p_without_ext.file_name().unwrap();
@@ -98,7 +94,7 @@ impl Args {
             out_name,
             out_dir,
             format: self.format,
-            sampling_filter,
+            sampling_filter: self.sampling_filter,
         }
     }
 }
