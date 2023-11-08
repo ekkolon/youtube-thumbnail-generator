@@ -1,14 +1,9 @@
 name: Rust CI
 
 on:
-  # Running jobs when pushing to the main branch is disabled for now.
-  # This is because we have no rust source files in the repo yet,
-  # or rather this step is an overkill for the changes being pushed to
-  # this repo.
-  #
-  #   push:
-  #     branches:
-  #       - main
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
