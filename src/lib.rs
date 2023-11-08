@@ -130,9 +130,6 @@ pub enum ImageFormat {
 ///
 /// ### Returns
 /// The function returns a new `YtImage` that represents the generated thumbnail.
-///
-/// In this example, a thumbnail with a target width and height of 100 pixels is generated
-/// from the `input_image` using the `CatmullRom` sampling filter.
 pub fn generate_thumbnail(
     yt_img: &YtImage,
     width: u32,
